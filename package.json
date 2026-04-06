@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "dev": "tsx app.ts"
+    "dev": "tsx app.ts",
+    "terminal": "tsx terminal-client.ts"
   },
   "dependencies": {
     "@langchain/core": "^1.1.39",
