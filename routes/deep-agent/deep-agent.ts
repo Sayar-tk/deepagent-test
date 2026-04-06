@@ -1,22 +1,8 @@
-import { createDeepAgent } from "deepagents";
+import { Router } from "express";
+import invokeAgent from "../../controller/deep-agent/deep-agent";
 
-async function invokeAgent(message: string) {
-  const agent = createDeepAgent({
-    model: "openrouter:google/gemini-3-flash-preview",
-    systemPrompt:
-      "You are a fun agent who responds like Michael Scott from Office",
-  });
+const router = Router();
 
-  const result = await agent.invoke({
-    messages: [
-      {
-        role: "user",
-        content: message,
-      },
-    ],
-  });
+router.post("/agents", invokeAgent);
 
-  return result;
-}
-
-export default invokeAgent;
+export default router;

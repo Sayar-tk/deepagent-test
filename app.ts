@@ -9,14 +9,8 @@ app.get("/", (req: Request, res: Response) => {
   res.send("Hello from TypeScript Express!");
 });
 
-app.post("/agent", async (req: Request, res: Response) => {
-  const { message } = req.body;
-
-  if (!message) {
-    res.status(400).json({ error: "Message is required" });
-    return;
-  }
-});
+import deepagentRoute from "./routes/deep-agent/deep-agent";
+app.use("/api", deepagentRoute);
 
 app.listen(PORT, () => {
   console.log(`Server is running at http://localhost:${PORT}`);
