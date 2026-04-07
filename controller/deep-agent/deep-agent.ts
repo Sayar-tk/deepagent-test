@@ -1,6 +1,7 @@
 import "dotenv/config";
 import { createDeepAgent } from "deepagents";
 import { ChatOllama } from "@langchain/ollama";
+import webSearch from "../../tools/tavily-web-search";
 
 async function invokeAgent(message: string): Promise<string> {
   const ollamaModel = new ChatOllama({
@@ -9,8 +10,8 @@ async function invokeAgent(message: string): Promise<string> {
 
   const agent = createDeepAgent({
     model: ollamaModel,
-    systemPrompt:
-      "You are a fun agent who responds like Michael Scott from Office",
+    tools: [webSearch],
+    systemPrompt: "You are a research agent",
   });
 
   try {

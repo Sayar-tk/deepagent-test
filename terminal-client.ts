@@ -2,7 +2,7 @@ import * as readline from "node:readline/promises";
 import { stdin, stdout } from "node:process";
 
 const rl = readline.createInterface({ input: stdin, output: stdout });
-const API_URL = "http://localhost:3000/api/agents";
+const API_URL = "http://localhost:3000/agent/deep-agent";
 
 async function sendMessage(message: string): Promise<string> {
   const response = await fetch(API_URL, {
@@ -12,7 +12,9 @@ async function sendMessage(message: string): Promise<string> {
   });
 
   if (!response.ok) {
-    const error = await response.json().catch(() => ({ error: "Unknown error" }));
+    const error = await response
+      .json()
+      .catch(() => ({ error: "Unknown error" }));
     throw new Error(error.error || `HTTP ${response.status}`);
   }
 

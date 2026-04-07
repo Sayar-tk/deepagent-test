@@ -3,7 +3,7 @@ import invokeAgent from "../../controller/deep-agent/deep-agent";
 
 const router = Router();
 
-router.post("/agents", async (req: Request, res: Response) => {
+router.post("/deep-agent", async (req: Request, res: Response) => {
   const { message } = req.body;
 
   if (!message) {

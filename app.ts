@@ -10,7 +10,7 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 import deepagentRoute from "./routes/deep-agent/deep-agent";
-app.use("/api", deepagentRoute);
+app.use("/agent", deepagentRoute);
 
 app.listen(PORT, () => {
   console.log(`Server is running at http://localhost:${PORT}`);
