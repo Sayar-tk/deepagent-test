@@ -15,5 +15,6 @@ export const research_subagent: SubAgent = {
   tools: [webSearch],
   systemPrompt: deepAgentSystemPrompt,
   middleware: [logToolCallsMiddleware],
+  skills: ["/skills/research-skills/"],
   model: ollamaModel,
 };

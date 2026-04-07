@@ -2,26 +2,42 @@ import "dotenv/config";
 import { createDeepAgent } from "deepagents";
 import { ChatOllama } from "@langchain/ollama";
 import { research_subagent } from "../../subagents/research-subagent/research-subagent";
+import { FilesystemBackend } from "deepagents";
+import { MemorySaver } from "@langchain/langgraph";
 
 async function invokeAgent(message: string): Promise<string> {
   const ollamaModel = new ChatOllama({
     model: "gemma4:31b-cloud",
   });
 
+  const config = {
+    configurable: {
+      thread_id: `thread-${Date.now()}`,
+    },
+  };
+
+  const backend = new FilesystemBackend({ rootDir: process.cwd() });
+  const checkpointer = new MemorySaver();
+
   const agent = createDeepAgent({
     model: ollamaModel,
     subagents: [research_subagent],
+    backend,
+    checkpointer,
   });
 
   try {
-    const result = await agent.invoke({
-      messages: [
-        {
-          role: "user",
-          content: message,
-        },
-      ],
-    });
+    const result = await agent.invoke(
+      {
+        messages: [
+          {
+            role: "user",
+            content: message,
+          },
+        ],
+      },
+      config,
+    );
 
     if (result && typeof result === "object" && "messages" in result) {
       const messages = result.messages as Array<{ content?: string }>;
