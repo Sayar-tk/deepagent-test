@@ -36,13 +36,23 @@ const webSearch = tool(
     description: "Run a web search using Tavily",
     schema: z.object({
       query: z.string().describe("The search query"),
-      maxResults: z.number().optional().default(5).describe("Maximum number of results"),
+      maxResults: z
+        .number()
+        .optional()
+        .default(5)
+        .describe("Maximum number of results"),
       topic: z
         .string()
         .optional()
         .default("general")
-        .describe("The type of search. Use 'news' for news/current events, 'general' for everything else. Defaults to 'general'."),
-      includeRawContent: z.boolean().optional().default(false).describe("Whether to include raw page content in results"),
+        .describe(
+          "The type of search. Use 'news' for news/current events, 'general' for everything else. Defaults to 'general'.",
+        ),
+      includeRawContent: z
+        .boolean()
+        .optional()
+        .default(false)
+        .describe("Whether to include raw page content in results"),
     }),
   },
 );
