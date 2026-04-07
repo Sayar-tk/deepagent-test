@@ -1,17 +1,16 @@
 import "dotenv/config";
 import { createDeepAgent } from "deepagents";
 import { ChatOllama } from "@langchain/ollama";
-import webSearch from "../../tools/tavily-web-search";
+import { research_subagent } from "../../subagents/research-subagent/research-subagent";
 
 async function invokeAgent(message: string): Promise<string> {
   const ollamaModel = new ChatOllama({
-    model: "kimi-k2.5:cloud",
+    model: "gemma4:31b-cloud",
   });
 
   const agent = createDeepAgent({
     model: ollamaModel,
-    tools: [webSearch],
-    systemPrompt: "You are a research agent",
+    subagents: [research_subagent],
   });
 
   try {
@@ -23,8 +22,6 @@ async function invokeAgent(message: string): Promise<string> {
         },
       ],
     });
-
-    console.log("RESULT:", result);
 
     if (result && typeof result === "object" && "messages" in result) {
       const messages = result.messages as Array<{ content?: string }>;
