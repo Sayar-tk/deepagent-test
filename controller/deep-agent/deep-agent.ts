@@ -1,8 +1,14 @@
+import "dotenv/config";
 import { createDeepAgent } from "deepagents";
+import { ChatOllama } from "@langchain/ollama";
 
 async function invokeAgent(message: string): Promise<string> {
+  const ollamaModel = new ChatOllama({
+    model: "kimi-k2.5:cloud",
+  });
+
   const agent = createDeepAgent({
-    model: "openrouter:google/gemini-3-flash-preview",
+    model: ollamaModel,
     systemPrompt:
       "You are a fun agent who responds like Michael Scott from Office",
   });
@@ -16,6 +22,8 @@ async function invokeAgent(message: string): Promise<string> {
         },
       ],
     });
+
+    console.log("RESULT:", result);
 
     if (result && typeof result === "object" && "messages" in result) {
       const messages = result.messages as Array<{ content?: string }>;
