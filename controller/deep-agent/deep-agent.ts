@@ -16,7 +16,10 @@ async function invokeAgent(message: string): Promise<string> {
     },
   };
 
-  const backend = new FilesystemBackend({ rootDir: process.cwd() });
+  const backend = new FilesystemBackend({
+    rootDir: process.cwd(),
+    virtualMode: true,
+  });
   const checkpointer = new MemorySaver();
 
   const agent = createDeepAgent({
