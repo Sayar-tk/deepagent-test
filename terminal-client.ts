@@ -3,12 +3,13 @@ import { stdin, stdout } from "node:process";
 
 const rl = readline.createInterface({ input: stdin, output: stdout });
 const API_URL = "http://localhost:3000/agent/deep-agent";
+const THREAD_ID = `terminal-${Date.now()}`;
 
 async function sendMessage(message: string): Promise<string> {
   const response = await fetch(API_URL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ message }),
+    body: JSON.stringify({ message, threadId: THREAD_ID }),
   });
 
   if (!response.ok) {
@@ -24,6 +25,7 @@ async function sendMessage(message: string): Promise<string> {
 
 async function main() {
   console.log("Deep Agent Terminal Client");
+  console.log(`Thread ID: ${THREAD_ID}`);
   console.log("Type 'exit' or 'quit' to stop\n");
 
   while (true) {

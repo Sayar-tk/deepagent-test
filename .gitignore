@@ -1,6 +1,7 @@
 /node_modules
 /dist
 dist/**/*
+large_tool_results/
 
 .env*
 

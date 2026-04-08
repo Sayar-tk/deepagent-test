@@ -6,28 +6,33 @@ import { FilesystemBackend } from "deepagents";
 import { MemorySaver } from "@langchain/langgraph";
 import { traceable } from "langsmith/traceable";
 
-async function invokeAgent(message: string): Promise<string> {
-  const ollamaModel = new ChatOllama({
-    model: "gemma4:31b-cloud",
-  });
+const DEFAULT_THREAD_ID = "thread-default";
+const checkpointer = new MemorySaver();
+const ollamaModel = new ChatOllama({
+  model: "gemma4:31b-cloud",
+});
+const backend = new FilesystemBackend({
+  rootDir: process.cwd(),
+  virtualMode: true,
+});
+const agent = createDeepAgent({
+  model: ollamaModel,
+  subagents: [research_subagent],
+  backend,
+  checkpointer,
+});
+
+async function invokeAgent(message: string, threadId?: string): Promise<string> {
+  const resolvedThreadId =
+    typeof threadId === "string" && threadId.trim().length > 0
+      ? threadId.trim()
+      : DEFAULT_THREAD_ID;
+
   const config = {
     configurable: {
-      thread_id: `thread-${Date.now()}`,
+      thread_id: resolvedThreadId,
     },
   };
-
-  const backend = new FilesystemBackend({
-    rootDir: process.cwd(),
-    virtualMode: true,
-  });
-  const checkpointer = new MemorySaver();
-
-  const agent = createDeepAgent({
-    model: ollamaModel,
-    subagents: [research_subagent],
-    backend,
-    checkpointer,
-  });
 
   try {
     const result = await agent.invoke(
@@ -60,6 +65,7 @@ async function invokeAgent(message: string): Promise<string> {
 const tracedInvokeAgent = traceable(invokeAgent, {
   name: "deep-agent-invoke",
   run_type: "chain",
+  project_name: process.env.LANGSMITH_PROJECT || "default",
 });
 
 export default tracedInvokeAgent;
