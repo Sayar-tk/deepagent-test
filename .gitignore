@@ -2,6 +2,7 @@
 /dist
 dist/**/*
 large_tool_results/
+docs/
 
 .env*
 
