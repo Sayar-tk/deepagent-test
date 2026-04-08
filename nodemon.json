@@ -1,6 +1,15 @@
 {
-  "watch": ["src"],
-  "ext": "ts",
-  "ignore": ["node_modules"],
-  "exec": "ts-node app.ts"
+  "watch": [
+    "app.ts",
+    "controller",
+    "routes",
+    "subagents",
+    "middleware",
+    "prompts",
+    "tools",
+    "skills"
+  ],
+  "ext": "ts,json",
+  "ignore": ["node_modules", "dist", ".git", "large_tool_results"],
+  "exec": "tsx app.ts"
 }

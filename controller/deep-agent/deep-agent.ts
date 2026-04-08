@@ -4,12 +4,12 @@ import { ChatOllama } from "@langchain/ollama";
 import { research_subagent } from "../../subagents/research-subagent/research-subagent";
 import { FilesystemBackend } from "deepagents";
 import { MemorySaver } from "@langchain/langgraph";
+import { traceable } from "langsmith/traceable";
 
 async function invokeAgent(message: string): Promise<string> {
   const ollamaModel = new ChatOllama({
     model: "gemma4:31b-cloud",
   });
-
   const config = {
     configurable: {
       thread_id: `thread-${Date.now()}`,
@@ -57,4 +57,9 @@ async function invokeAgent(message: string): Promise<string> {
   }
 }
 
-export default invokeAgent;
+const tracedInvokeAgent = traceable(invokeAgent, {
+  name: "deep-agent-invoke",
+  run_type: "chain",
+});
+
+export default tracedInvokeAgent;
