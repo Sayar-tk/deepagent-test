@@ -1,8 +1,10 @@
 import * as readline from "node:readline/promises";
 import { stdin, stdout } from "node:process";
 
+const port = process.env.PORT || 3000;
+
 const rl = readline.createInterface({ input: stdin, output: stdout });
-const API_URL = "http://localhost:3001/agent/deep-agent";
+const API_URL = `http://localhost:${port}/agent/deep-agent`;
 const THREAD_ID = `terminal-${Date.now()}`;
 
 async function sendMessage(message: string): Promise<string> {

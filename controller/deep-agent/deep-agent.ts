@@ -6,10 +6,12 @@ import { FilesystemBackend } from "deepagents";
 import { MemorySaver } from "@langchain/langgraph";
 import { traceable } from "langsmith/traceable";
 
+const isLangSmithEnabled = process.env.LANGSMITH_TRACING === "true";
+const modelName = process.env.OLLAMA_MODEL || "gemma4:31b-cloud";
 const DEFAULT_THREAD_ID = "thread-default";
 const checkpointer = new MemorySaver();
 const ollamaModel = new ChatOllama({
-  model: "gemma4:31b-cloud",
+  model: modelName,
 });
 const backend = new FilesystemBackend({
   rootDir: process.cwd(),
@@ -22,7 +24,10 @@ const agent = createDeepAgent({
   checkpointer,
 });
 
-async function invokeAgent(message: string, threadId?: string): Promise<string> {
+async function invokeAgent(
+  message: string,
+  threadId?: string,
+): Promise<string> {
   const resolvedThreadId =
     typeof threadId === "string" && threadId.trim().length > 0
       ? threadId.trim()
@@ -68,4 +73,4 @@ const tracedInvokeAgent = traceable(invokeAgent, {
   project_name: process.env.LANGSMITH_PROJECT || "default",
 });
 
-export default tracedInvokeAgent;
+export default isLangSmithEnabled ? tracedInvokeAgent : invokeAgent;
